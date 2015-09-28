@@ -7,13 +7,37 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity
+import java.util.Arrays;
+
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener
 {
+    private int press = 0;
+    protected MyTextView[] textViews;
+
     @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        if(event.getAction() == MotionEvent.ACTION_DOWN)
+        {
+            press = Arrays.asList(textViews).indexOf(v);
+            Log.i("onCreate", "press: " + press);
+            return true;
+        }
+        if(event.getAction() == MotionEvent.ACTION_UP)
+        {
+            press = Arrays.asList(textViews).indexOf(v);
+            Log.i("release",press+"");
+            //((MyTextView) v).incrementAndUpdate(press);
+            return false;
+        }
+        return true;
+    }
+
     protected void onCreate(Bundle savedInstanceState)
     {
 
@@ -24,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         final SharedPreferences.Editor mySPEditor = mySP.edit();
 
 
-        MyTextView[] textViews = {(MyTextView) findViewById(R.id.tl_textView),
+        textViews = new MyTextView[] {(MyTextView) findViewById(R.id.tl_textView),
                 (MyTextView) findViewById(R.id.tr_textView),
                 (MyTextView) findViewById(R.id.bl_textView),
                 (MyTextView) findViewById(R.id.br_textView)};
@@ -34,27 +58,7 @@ public class MainActivity extends AppCompatActivity
         {
             final int y = x;
             final MyTextView[] textViewz = textViews;
-            textViews[x].setOnClickListener(new View.OnClickListener()
-            {
-
-                public void onClick(View v)
-                {
-                    textViewz[y].incrementAndUpdate();
-                    String timez;
-                    if(textViewz[y].getText()) == 1)
-                        timez = " time.";
-                    else
-                        timez = " times.";
-                    Toast.makeText(MainActivity.this, "Pressed " + textViewz[y].getText() + timez,
-                            Toast.LENGTH_SHORT).show();
-                    Log.i("onCreate", textViewz[y].getText() + " was pressed " +
-                            textViewz[y].getText() + timez);
-                    mySPEditor.putInt("textViews_" + y,
-                            Integer.parseInt((String) textViewz[y].getText()));
-
-                    mySPEditor.commit();
-                }
-            });
+            textViews[x].setOnTouchListener(this);
         }
 
     }

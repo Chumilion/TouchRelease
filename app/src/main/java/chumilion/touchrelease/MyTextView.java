@@ -16,8 +16,8 @@ import java.util.Arrays;
  */
 public class MyTextView extends View
 {
-    Paint paint;
     private int[] myValues;
+    private int myTxtSize;
 
     public MyTextView(Context context, AttributeSet attrs)
     {
@@ -30,10 +30,12 @@ public class MyTextView extends View
     {
         TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.MyTextView, 0, 0);
         int startValue = 0;
+        myValues = new int[4];
         try
         {
             startValue = a.getInt(R.styleable.MyTextView_initialValue, 0);
             Arrays.fill(myValues, startValue);
+            myTxtSize = a.getInt(R.styleable.MyTextView_textSize, 30);
         }
         finally
         {
@@ -50,6 +52,10 @@ public class MyTextView extends View
     {
         return myValues;
     }
+    public int getTxtSize()
+    {
+        return myTxtSize;
+    }
 
     public void setValues(int[] arr)
     {
@@ -58,6 +64,10 @@ public class MyTextView extends View
     public void setValues(int ind, int val)
     {
         myValues[ind] = val;
+    }
+    public void setTxtSize(int s)
+    {
+        myTxtSize = s;
     }
 
     public void incrementAndUpdate(int ind)
@@ -69,12 +79,15 @@ public class MyTextView extends View
     protected void onDraw(Canvas canvas)
     {
         super.onDraw(canvas);
-        paint = new Paint();
+        Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawText(myValues[0] + "", getHeight()/4, getWidth()/4, paint);
-        canvas.drawText(myValues[1] + "", getHeight()/4, getWidth()*3/4, paint);
-        canvas.drawText(myValues[2] + "", getHeight()*3/4, getWidth()/4, paint);
-        canvas.drawText(myValues[3] + "", getHeight()*3/4, getWidth()*3/4, paint);
+        paint.setTextSize(myTxtSize);
+        paint.setTextAlign(Paint.Align.CENTER);
+        float shift = (paint.descent() + paint.ascent()) / 2;
+        canvas.drawText(myValues[0] + "", getWidth()/4, getHeight()/4 - shift, paint);
+        canvas.drawText(myValues[1] + "", getWidth()*3/4, getHeight()/4 - shift, paint);
+        canvas.drawText(myValues[2] + "", getWidth()/4, getHeight()*3/4 - shift, paint);
+        canvas.drawText(myValues[3] + "", getWidth()*3/4, getHeight()*3/4 - shift, paint);
     }
 }

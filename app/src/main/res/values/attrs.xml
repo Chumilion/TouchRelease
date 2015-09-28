@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="MyTextView">
         <attr name="initialValue" format="integer"/>
+        <attr name="textSize" format="integer"/>
     </declare-styleable>
     <integer name="zero">0</integer>
 </resources>
