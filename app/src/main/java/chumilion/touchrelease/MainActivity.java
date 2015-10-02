@@ -9,34 +9,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener
+public class MainActivity extends AppCompatActivity
 {
     private int press = 0;
     protected MyTextView[] textViews;
+    protected ViewGroup layout;
+    protected MyOnTouchListener listener;
 
     @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
-        if(event.getAction() == MotionEvent.ACTION_DOWN)
-        {
-            press = Arrays.asList(textViews).indexOf(v);
-            Log.i("onCreate", "press: " + press);
-            return true;
-        }
-        if(event.getAction() == MotionEvent.ACTION_UP)
-        {
-            press = Arrays.asList(textViews).indexOf(v);
-            Log.i("release",press+"");
-            //((MyTextView) v).incrementAndUpdate(press);
-            return false;
-        }
-        return true;
-    }
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -53,14 +40,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 (MyTextView) findViewById(R.id.bl_textView),
                 (MyTextView) findViewById(R.id.br_textView)};
 
+        layout = (ViewGroup) findViewById(R.id.layout);
+        listener = new MyOnTouchListener();
+        //layout.setOnTouchListener(listener);
 
         for(int x = 0; x < textViews.length; x++)
         {
             final int y = x;
             final MyTextView[] textViewz = textViews;
-            textViews[x].setOnTouchListener(this);
+            textViews[x].setOnTouchListener(listener);
         }
-
     }
 
     @Override
@@ -86,5 +75,31 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class MyOnTouchListener implements View.OnTouchListener
+    {
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            if(event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                press = Arrays.asList(textViews).indexOf(v);
+                Log.i("onCreate", "press: " + press);
+                return true;
+            }
+            if(event.getAction() == MotionEvent.ACTION_CANCEL)
+            {
+                return false;
+            }
+            if(event.getAction() == MotionEvent.ACTION_UP)
+            {
+                press = Arrays.asList(textViews).indexOf(v);
+                Log.i("release",press+"");
+                //((MyTextView) v).incrementAndUpdate(press);
+
+                return false;
+            }
+            return true;
+        }
     }
 }
