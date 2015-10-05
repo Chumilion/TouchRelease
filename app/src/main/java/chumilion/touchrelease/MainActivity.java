@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void setPress(int p)
+    {
+        press = p;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -81,21 +86,44 @@ public class MainActivity extends AppCompatActivity
     {
         public boolean onTouch(View v, MotionEvent event)
         {
-            if(event.getAction() == MotionEvent.ACTION_DOWN)
+            MyTextView mtv = (MyTextView) v;
+            int up = Arrays.asList(textViews).indexOf(v);
+            if(mtv.getPass())
             {
-                press = Arrays.asList(textViews).indexOf(v);
-                Log.i("onCreate", "press: " + press);
+
+                Log.i("listener", up + " hey down!");
+                Log.i("listener", MotionEvent.ACTION_DOWN + " " + event.getAction());
+                mtv.setPass(false);
                 return true;
             }
+            if(event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                int pr = Arrays.asList(textViews).indexOf(v);
+                setPress(pr);
+                Log.i("listener", up + " hey real down!");
+                return true;
+            }
+
+            if(event.getAction() == MotionEvent.ACTION_MOVE)
+            {
+                Log.i("listener", up + " hey move!");
+                mtv.setInside(true);
+                return true;
+            }
+
             if(event.getAction() == MotionEvent.ACTION_CANCEL)
             {
+                Log.i("listener", up + " hey outside!");
+                mtv.setInside(false);
                 return false;
             }
+
             if(event.getAction() == MotionEvent.ACTION_UP)
             {
-                press = Arrays.asList(textViews).indexOf(v);
-                Log.i("release",press+"");
-                //((MyTextView) v).incrementAndUpdate(press);
+                if(mtv.getInside())
+                {
+                    textViews[press].incrementAndUpdate(up);
+                }
 
                 return false;
             }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 /**
@@ -18,15 +19,22 @@ public class MyLayout extends RelativeLayout
 
     public boolean onInterceptTouchEvent(MotionEvent ev)
     {
-        if(ev.getAction() == MotionEvent.ACTION_UP)
+        if(ev.getAction() == MotionEvent.ACTION_DOWN)
         {
-            for (int i = 0; i < getChildCount(); i++)
+            for(int i = 0; i < ((ViewGroup) this).getChildCount(); i++)
             {
-                View child = getChildAt(i);
+                MyTextView child = (MyTextView) ((ViewGroup) this).getChildAt(i);
+                child.setPass(true);
                 child.dispatchTouchEvent(ev);
+                child.setPass(false);
             }
-            return true;
+            return false;
         }
+        //for(int i = 0; i < ((ViewGroup) this).getChildCount(); i++)
+        //{
+        //    MyTextView child = (MyTextView) ((ViewGroup) this).getChildAt(i);
+        //    child.dispatchTouchEvent(ev);
+        //}
         return false;
     }
 }

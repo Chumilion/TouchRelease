@@ -18,11 +18,14 @@ public class MyTextView extends View
 {
     private int[] myValues;
     private int myTxtSize;
+    private boolean myPass;
+    private boolean myInside;
 
     public MyTextView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         setupAttributes(attrs);
+        myPass = false;
         update();
     }
 
@@ -56,6 +59,14 @@ public class MyTextView extends View
     {
         return myTxtSize;
     }
+    public boolean getPass()
+    {
+        return myPass;
+    }
+    public boolean getInside()
+    {
+        return myInside;
+    }
 
     public void setValues(int[] arr)
     {
@@ -68,6 +79,14 @@ public class MyTextView extends View
     public void setTxtSize(int s)
     {
         myTxtSize = s;
+    }
+    public void setPass(boolean tf)
+    {
+        myPass = tf;
+    }
+    public void setInside(boolean tf)
+    {
+        myInside = tf;
     }
 
     public void incrementAndUpdate(int ind)
