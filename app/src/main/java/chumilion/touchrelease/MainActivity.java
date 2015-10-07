@@ -18,7 +18,6 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
 {
-    private int press = 0;
     protected MyTextView[] textViews;
     protected ViewGroup layout;
     protected MyOnTouchListener listener;
@@ -60,11 +59,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void setPress(int p)
-    {
-        press = p;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -86,45 +80,14 @@ public class MainActivity extends AppCompatActivity
     {
         public boolean onTouch(View v, MotionEvent event)
         {
-            MyTextView mtv = (MyTextView) v;
-            int up = Arrays.asList(textViews).indexOf(v);
-            if(mtv.getPass())
-            {
-
-                Log.i("listener", up + " hey down!");
-                Log.i("listener", MotionEvent.ACTION_DOWN + " " + event.getAction());
-                mtv.setPass(false);
-                return true;
-            }
-            if(event.getAction() == MotionEvent.ACTION_DOWN)
-            {
-                int pr = Arrays.asList(textViews).indexOf(v);
-                setPress(pr);
-                Log.i("listener", up + " hey real down!");
-                return true;
-            }
-
-            if(event.getAction() == MotionEvent.ACTION_MOVE)
-            {
-                Log.i("listener", up + " hey move!");
-                mtv.setInside(true);
-                return true;
-            }
-
-            if(event.getAction() == MotionEvent.ACTION_CANCEL)
-            {
-                Log.i("listener", up + " hey outside!");
-                mtv.setInside(false);
-                return false;
-            }
 
             if(event.getAction() == MotionEvent.ACTION_UP)
             {
-                if(mtv.getInside())
-                {
-                    textViews[press].incrementAndUpdate(up);
-                }
-
+                View up = (MyTextView) ((MyLayout) layout).getUp();
+                if(up == null)
+                    return false;
+                int down = Arrays.asList(textViews).indexOf(v);
+                ((MyTextView) up).incrementAndUpdate(down);
                 return false;
             }
             return true;
